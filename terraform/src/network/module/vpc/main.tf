@@ -1,0 +1,166 @@
+variable "env" {}
+variable "vpc_cidr_block" {}
+variable "subnet_cidr_block_public_a" {}
+variable "subnet_cidr_block_public_c" {}
+variable "subnet_cidr_block_private_web_a" {}
+variable "subnet_cidr_block_private_web_c" {}
+variable "subnet_cidr_block_private_db_a" {}
+variable "subnet_cidr_block_private_db_c" {}
+variable "az_a" {}
+variable "az_c" {}
+
+##################################################
+# vpc
+##################################################
+resource "aws_vpc" "main" {
+  cidr_block           = var.vpc_cidr_block
+  enable_dns_support   = true
+  enable_dns_hostnames = true
+
+  tags = {
+    Env = "${var.env}"
+  }
+}
+
+##################################################
+# Internet gateway
+##################################################
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "public"
+    Env  = var.env
+  }
+}
+
+##################################################
+# public subnet
+##################################################
+resource "aws_subnet" "public_a" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = var.subnet_cidr_block_public_a
+  availability_zone = var.az_a
+
+  tags = {
+    Name = "public_a"
+    Env  = var.env
+  }
+}
+
+resource "aws_subnet" "public_c" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = var.subnet_cidr_block_public_c
+  availability_zone = var.az_c
+
+  tags = {
+    Name = "public_c"
+    Env  = var.env
+  }
+}
+
+resource "aws_route_table" "public_a" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "public_a"
+    Env  = var.env
+  }
+}
+
+resource "aws_route_table" "public_c" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "public_c"
+    Env  = var.env
+  }
+}
+
+resource "aws_route_table_association" "public_a" {
+  subnet_id      = aws_subnet.public_a.id
+  route_table_id = aws_route_table.public_a.id
+}
+
+resource "aws_route_table_association" "public_c" {
+  subnet_id      = aws_subnet.public_c.id
+  route_table_id = aws_route_table.public_c.id
+}
+
+##################################################
+# private_web subnet
+##################################################
+resource "aws_subnet" "private_web_a" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = var.subnet_cidr_block_private_web_a
+  availability_zone = var.az_a
+
+  tags = {
+    Name = "private_web_a"
+    Env  = var.env
+  }
+}
+
+resource "aws_subnet" "private_web_c" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = var.subnet_cidr_block_private_web_c
+  availability_zone = var.az_a
+
+  tags = {
+    Name = "private_web_c"
+    Env  = var.env
+  }
+}
+
+resource "aws_route_table" "private_web_a" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "private_web_a"
+    Env  = var.env
+  }
+}
+
+resource "aws_route_table" "private_web_c" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "private_web_c"
+    Env  = var.env
+  }
+}
+
+resource "aws_route_table_association" "private_web_a" {
+  subnet_id      = aws_subnet.private_web_a.id
+  route_table_id = aws_route_table.private_web_a.id
+}
+
+resource "aws_route_table_association" "private_web_c" {
+  subnet_id      = aws_subnet.private_web_c.id
+  route_table_id = aws_route_table.private_web_c.id
+}
+
+##################################################
+# private_db subnet
+##################################################
+resource "aws_subnet" "private_db_a" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = var.subnet_cidr_block_private_db_a
+  availability_zone = var.az_a
+
+  tags = {
+    Name = "private_db_a"
+    Env  = var.env
+  }
+}
+
+resource "aws_subnet" "private_db_c" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = var.subnet_cidr_block_private_db_c
+  availability_zone = var.az_c
+
+  tags = {
+    Name = "private_db_c"
+    Env  = var.env
+  }
+}
