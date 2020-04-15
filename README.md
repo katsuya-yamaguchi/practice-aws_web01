@@ -10,7 +10,7 @@ $ docker-compose run --rm tf bash
 
 2.ログインしたコンテナ内で、Terraformを実行する。
 ```
-$ cd /tf
+$ cd /tf/[対象のサービス]/env/[dev or prd]
 $ /var/tmp/terraform init
 $ /var/tmp/terraform plan or apply
 ```
