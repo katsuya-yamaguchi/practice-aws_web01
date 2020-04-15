@@ -39,3 +39,10 @@ module "vpc" {
 #   route_table_id_private_web_a = module.vpc.route_table_id_private_web_a
 #   route_table_id_private_web_c = module.vpc.route_table_id_private_web_c
 # }
+
+module "security_group" {
+  source = "../../module/security_group"
+
+  env    = "dev"
+  vpc_id = module.vpc.vpc_id
+}
