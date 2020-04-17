@@ -1,3 +1,6 @@
+output "security_group_alb" {
+  value = module.security_group.security_group_alb
+}
 output "security_group_web" {
   value = module.security_group.security_group_web
 }
