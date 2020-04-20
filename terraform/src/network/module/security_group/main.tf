@@ -69,6 +69,16 @@ resource "aws_security_group_rule" "web_permit_from_alb" {
   to_port                  = "80"
 }
 
+resource "aws_security_group_rule" "web_permit_from_bastion" {
+  security_group_id        = aws_security_group.web.id
+  source_security_group_id = aws_security_group.bastion.id
+  description              = "permit from bastion."
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "22"
+  to_port                  = "22"
+}
+
 resource "aws_security_group_rule" "web_permit_to_db" {
   security_group_id        = aws_security_group.web.id
   source_security_group_id = aws_security_group.db.id
@@ -101,4 +111,38 @@ resource "aws_security_group_rule" "db_permit_from_web" {
   protocol                 = "tcp"
   from_port                = "3306"
   to_port                  = "3306"
+}
+
+##################################################
+# security group (bastion)
+##################################################
+resource "aws_security_group" "bastion" {
+  name                   = "bastion"
+  vpc_id                 = var.vpc_id
+  revoke_rules_on_delete = false
+
+  tags = {
+    Name = "bastion"
+    Env  = var.env
+  }
+}
+
+resource "aws_security_group_rule" "bastion_permit_from_ssh" {
+  security_group_id = aws_security_group.bastion.id
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "permit from ssh."
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = "22"
+  to_port           = "22"
+}
+
+resource "aws_security_group_rule" "bastion_permit_to_web" {
+  security_group_id        = aws_security_group.bastion.id
+  source_security_group_id = aws_security_group.web.id
+  description              = "permit to web."
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "22"
+  to_port                  = "22"
 }

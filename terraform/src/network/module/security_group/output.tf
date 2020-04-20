@@ -8,3 +8,10 @@ output "security_group_alb" {
 output "security_group_web" {
   value = aws_security_group.web.id
 }
+
+##################################################
+# security group (bastion)
+##################################################
+output "security_group_bastion" {
+  value = aws_security_group.bastion.id
+}
