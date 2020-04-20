@@ -33,3 +33,12 @@ module "ec2" {
   subnet_id_private_web_c = data.terraform_remote_state.network.outputs.subnet_id_private_web_c
   security_group_web      = data.terraform_remote_state.network.outputs.security_group_web
 }
+
+# module "elb" {
+#   source = "../../module/elb"
+
+#   env                     = "dev"
+#   subnet_id_private_web_a = data.terraform_remote_state.network.outputs.subnet_id_private_web_a
+#   subnet_id_private_web_c = data.terraform_remote_state.network.outputs.subnet_id_private_web_c
+#   security_group_alb      = data.terraform_remote_state.network.outputs.security_group_alb
+# }
