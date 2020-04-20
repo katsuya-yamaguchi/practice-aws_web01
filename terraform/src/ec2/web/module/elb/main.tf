@@ -1,7 +1,7 @@
 variable "env" {}
 variable "subnet_id_private_web_a" {}
 variable "subnet_id_private_web_c" {}
-# variable "log_bucket" {}
+variable "logging_bucket" {}
 variable "security_group_alb" {}
 
 
@@ -19,11 +19,11 @@ resource "aws_lb" "alb" {
   # drop_invalid_header_fields = 
   enable_deletion_protection = false
   idle_timeout               = 60
-  #access_logs {
-  #  bucket  = var.log_bucket
-  #  prefix  = join("/", list("log", var.env, "alb", "access_logs.log"))
-  #  enabled = true
-  #}
+  access_logs {
+    bucket  = var.logging_bucket
+    prefix  = join("/", list("alb", "access_logs.log"))
+    enabled = true
+  }
   tags = {
     Env = var.env
   }

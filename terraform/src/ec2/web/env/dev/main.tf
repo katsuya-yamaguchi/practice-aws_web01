@@ -17,6 +17,15 @@ data "terraform_remote_state" "network" {
   }
 }
 
+data "terraform_remote_state" "s3" {
+  backend = "s3"
+  config = {
+    bucket = "tfstate.katsuya-place.com"
+    region = "ap-northeast-1"
+    key    = "web01/s3/dev.tfstate"
+  }
+}
+
 provider "aws" {
   region = "ap-northeast-1"
 }
@@ -41,4 +50,5 @@ module "ec2" {
 #   subnet_id_private_web_a = data.terraform_remote_state.network.outputs.subnet_id_private_web_a
 #   subnet_id_private_web_c = data.terraform_remote_state.network.outputs.subnet_id_private_web_c
 #   security_group_alb      = data.terraform_remote_state.network.outputs.security_group_alb
+#   logging_bucket          = data.terraform_remote_state.s3.outputs.s3_bucket_logging
 # }
