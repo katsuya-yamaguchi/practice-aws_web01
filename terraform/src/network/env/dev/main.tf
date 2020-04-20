@@ -46,3 +46,10 @@ module "security_group" {
   env    = "dev"
   vpc_id = module.vpc.vpc_id
 }
+
+# module "route53" {
+#   source = "../../module/route53"
+
+#   alb_dns_name = ""
+#   alb_zone_id  = ""
+# }
