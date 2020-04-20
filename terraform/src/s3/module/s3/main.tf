@@ -2,7 +2,7 @@ variable "env" {}
 
 data "aws_iam_policy_document" "logging_bucket_policy" {
   statement {
-    sid = ""
+    sid    = ""
     effect = "Allow"
     principals {
       type = "*"
