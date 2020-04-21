@@ -10,6 +10,13 @@ output "security_group_web" {
 }
 
 ##################################################
+# security group (db)
+##################################################
+output "security_group_db" {
+  value = aws_security_group.db.id
+}
+
+##################################################
 # security group (bastion)
 ##################################################
 output "security_group_bastion" {
