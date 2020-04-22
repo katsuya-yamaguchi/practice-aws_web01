@@ -35,7 +35,6 @@ resource "aws_db_instance" "db" {
   backup_retention_period = 0
   backup_window           = "16:00-16:30"
   # ca_cert_identifier                    = ""
-  # character_set_name                    = ""
   copy_tags_to_snapshot    = true
   db_subnet_group_name     = aws_db_subnet_group.db.name
   delete_automated_backups = true
@@ -80,16 +79,16 @@ resource "aws_db_instance" "db" {
   }
 }
 
-resource "aws_kms_key" "rds_storage" {
-  description             = "key to encrypt rds storage."
-  key_usage               = "ENCRYPT_DECRYPT"
-  deletion_window_in_days = 7
-  enable_key_rotation     = false
-  tags = {
-    Name = "rds_storage"
-    Env  = var.env
-  }
-}
+# resource "aws_kms_key" "rds_storage" {
+#   description             = "key to encrypt rds storage."
+#   key_usage               = "ENCRYPT_DECRYPT"
+#   deletion_window_in_days = 7
+#   enable_key_rotation     = false
+#   tags = {
+#     Name = "rds_storage"
+#     Env  = var.env
+#   }
+# }
 
 # resource "aws_kms_key" "rds_performance_insight" {
 #   description             = "key to encrypt rds performance insight."

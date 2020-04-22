@@ -6,6 +6,8 @@ variable "key_pair_name" {}
 variable "subnet_id_private_web_a" {}
 variable "subnet_id_private_web_c" {}
 variable "security_group_web" {}
+variable "web_instance_profile_arn" {}
+
 
 resource "aws_launch_template" "web" {
   name                                 = "web"
@@ -13,8 +15,11 @@ resource "aws_launch_template" "web" {
   disable_api_termination              = false
   image_id                             = "ami-0c6f9336767cd9243"
   instance_initiated_shutdown_behavior = "stop"
-  instance_type                        = var.instance_type
-  key_name                             = "web01"
+  iam_instance_profile {
+    arn = var.web_instance_profile_arn
+  }
+  instance_type = var.instance_type
+  key_name      = "web01"
   monitoring {
     enabled = true
   }
