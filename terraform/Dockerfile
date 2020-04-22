@@ -13,7 +13,9 @@ RUN apt-get update && \
     wget "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"  && \
     unzip awscli-exe-linux-x86_64.zip && \
     ./aws/install  && \
-    rm -f terraform_0.12.24_linux_amd64.zip awscli-exe-linux-x86_64.zip
+    wget "https://releases.hashicorp.com/packer/1.5.5/packer_1.5.5_linux_amd64.zip" && \
+    unzip packer_1.5.5_linux_amd64.zip && \
+    rm -f terraform_0.12.24_linux_amd64.zip awscli-exe-linux-x86_64.zip packer_1.5.5_linux_amd64.zip
 
 WORKDIR ${ROOT_PATH}
 COPY .aws/config ${ROOT_PATH}/.aws/
