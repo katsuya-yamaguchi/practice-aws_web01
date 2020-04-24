@@ -137,12 +137,22 @@ resource "aws_security_group_rule" "bastion_permit_from_ssh" {
   to_port           = "22"
 }
 
-resource "aws_security_group_rule" "bastion_permit_to_web" {
-  security_group_id        = aws_security_group.bastion.id
-  source_security_group_id = aws_security_group.web.id
-  description              = "permit to web."
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = "22"
-  to_port                  = "22"
+# resource "aws_security_group_rule" "bastion_permit_to_web" {
+#   security_group_id        = aws_security_group.bastion.id
+#   source_security_group_id = aws_security_group.web.id
+#   description              = "permit to web."
+#   type                     = "egress"
+#   protocol                 = "tcp"
+#   from_port                = "22"
+#   to_port                  = "22"
+# }
+
+resource "aws_security_group_rule" "bastion_permit_to_internet" {
+  security_group_id = aws_security_group.bastion.id
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "permit to internet."
+  type              = "egress"
+  protocol          = "-1"
+  from_port         = "0"
+  to_port           = "0"
 }
