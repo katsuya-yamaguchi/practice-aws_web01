@@ -8,6 +8,7 @@ WORKDIR /var/tmp
 RUN apt-get update && \
     apt-get install -y wget \
                        unzip \
+                       ssh \
                        python3.8 \
                        python3.8-distutils && \
     wget "https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip"  && \
