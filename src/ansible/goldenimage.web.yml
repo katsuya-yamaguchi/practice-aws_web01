@@ -1,0 +1,98 @@
+- name: "GoldenImage Web"
+  hosts: web
+  become: true
+  tasks:
+    - name: update
+      yum: name=* state=latest
+
+    - name: install package
+      yum: 
+        name:
+          - git
+          - gcc
+          - openssl-devel
+          - readline-devel
+          - zlib-devel
+          - bzip2
+
+    - name: add app user
+      user:
+        name: app-user
+
+    - name: install rbenv
+      become_user: app-user
+      git:
+        repo: https://github.com/rbenv/rbenv.git
+        dest: /home/app-user/.rbenv
+    
+    - name: add rbenv path
+      become_user: app-user
+      blockinfile:
+          dest: /home/app-user/.bash_profile
+          content: |
+            export PATH="$HOME/.rbenv/bin:$PATH"
+            eval "$(rbenv init -)"
+
+    - name: create rbenv plugins dir
+      become_user: app-user
+      file:
+        path: /home/app-user/.rbenv/plugins
+        state: directory
+        owner: app-user
+        group: app-user
+        mode: 0775
+
+    - name: install ruby-build
+      become_user: app-user
+      git:
+        repo: https://github.com/rbenv/ruby-build.git
+        dest: /home/app-user/.rbenv/plugins/ruby-build
+
+    - name: check ruby version
+      become_user: app-user
+      shell: ruby -v
+      register: check_ruby_version_rc
+      ignore_errors: True
+      args:
+        chdir: /home/app-user
+
+    - name: setup ruby-build
+      debug:
+        shell: .rbenv/plugins/ruby-build/install.sh
+        args:
+          chdir: /home/app-user
+      when: check_ruby_version_rc == 1
+
+    - name: activate ruby
+      debug:
+        become_user: app-user
+        shell: . ~/.bash_profile && rbenv install 2.6.3
+        args:
+          chdir: /home/app-user
+      when: check_ruby_version_rc == 1
+
+    - name: create ssh directory
+      become_user: app-user
+      file:
+        path: /home/app-user/.ssh
+        state: directory
+        owner: app-user
+        group: app-user
+        mode: 0700
+
+    - name: copy github ssh key
+      copy:
+        src: ../id_rsa
+        dest: /home/app-user/.ssh/id_rsa
+        owner: app-user
+        group: app-user
+        mode: 0600
+
+    - name: Deploy site files from Github repository
+      become_user: app-user
+      git:
+        repo: git@github.com:katsuya-yamaguchi/rails_sample_apps.git
+        dest: /home/app-user/www/app
+        key_file: /home/app-user/.ssh/id_rsa
+        accept_hostkey: yes
+        force: yes
