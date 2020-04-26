@@ -50,26 +50,24 @@
 
     - name: check ruby version
       become_user: app-user
-      shell: ruby -v
-      register: check_ruby_version_rc
+      shell: . ~/.bash_profile && ruby -v
+      register: check_ruby_version
       ignore_errors: True
       args:
         chdir: /home/app-user
 
     - name: setup ruby-build
-      debug:
-        shell: .rbenv/plugins/ruby-build/install.sh
-        args:
-          chdir: /home/app-user
-      when: check_ruby_version_rc == 1
+      shell: .rbenv/plugins/ruby-build/install.sh
+      args:
+        chdir: /home/app-user
+      when: check_ruby_version.rc != 0
 
     - name: activate ruby
-      debug:
-        become_user: app-user
-        shell: . ~/.bash_profile && rbenv install 2.6.3
-        args:
-          chdir: /home/app-user
-      when: check_ruby_version_rc == 1
+      become_user: app-user
+      shell: . ~/.bash_profile && rbenv install 2.6.3
+      args:
+        chdir: /home/app-user
+      when: check_ruby_version.rc != 0
 
     - name: create ssh directory
       become_user: app-user
