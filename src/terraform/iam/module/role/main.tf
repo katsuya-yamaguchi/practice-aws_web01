@@ -30,10 +30,16 @@ data "aws_iam_policy_document" "rds_access_policy" {
     sid    = ""
     effect = "Allow"
     actions = [
-      "rds-db:connect"
+      "rds-db:connect",
+      "s3:DeleteObject*",
+      "s3:GetObject*",
+      "s3:ListBucket",
+      "s3:PutObject"
     ]
     resources = [
-      "arn:aws:rds-db:ap-northeast-1:${var.account_id}:dbuser:*/${var.rds_db_user_name}"
+      "arn:aws:rds-db:ap-northeast-1:${var.account_id}:dbuser:*/${var.rds_db_user_name}",
+      "arn:aws:s3:::assets-${var.env}-katsuya-place-work",
+      "arn:aws:s3:::assets-${var.env}-katsuya-place-work/*"
     ]
   }
 }
