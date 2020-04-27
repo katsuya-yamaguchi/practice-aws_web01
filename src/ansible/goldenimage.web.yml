@@ -1,9 +1,9 @@
 - name: "GoldenImage Web"
-  hosts: web
+  hosts: all
   become: true
   tasks:
-    - name: update
-      yum: name=* state=latest
+    # - name: update
+    #   yum: name=* state=latest
 
     - name: install package
       yum: 
@@ -32,6 +32,9 @@
           content: |
             export PATH="$HOME/.rbenv/bin:$PATH"
             eval "$(rbenv init -)"
+            export AWS_ACCESS_KEY_ID={{AWS_ACCESS_KEY_ID}}
+            export AWS_SECRET_ACCESS_KEY={{AWS_SECRET_KEY_ID}}
+            export AWS_DEFAULT_REGION=ap-northeast-1
 
     - name: create rbenv plugins dir
       become_user: app-user
@@ -78,9 +81,18 @@
         group: app-user
         mode: 0700
 
-    - name: copy github ssh key
-      copy:
-        src: ../id_rsa
+    - name: check ssh secretkey
+      shell: ls -l /home/app-user/.ssh/id_rsa
+      register: check_ssh_secretkey
+      ignore_errors: True
+
+    - name: create ssh secretkey
+      become_user: app-user
+      shell: source ~/.bash_profile && aws secretsmanager get-secret-value --secret-id ssh_secret_key_github --query 'SecretBinary' --output 'text' | base64 -d > /home/app-user/.ssh/id_rsa
+      when: check_ssh_secretkey.rc != 0
+
+    - name: chown && chmod ssh secretkey
+      file:
         dest: /home/app-user/.ssh/id_rsa
         owner: app-user
         group: app-user
