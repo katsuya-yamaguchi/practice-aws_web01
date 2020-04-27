@@ -176,3 +176,36 @@ resource "aws_subnet" "private_db_c" {
     Env  = var.env
   }
 }
+
+##################################################
+# vpc endpoint
+##################################################
+resource "aws_vpc_endpoint" "s3" {
+  vpc_endpoint_type = "Gateway"
+  vpc_id            = aws_vpc.main.id
+  service_name      = "com.amazonaws.ap-northeast-1.s3"
+  policy            = data.aws_iam_policy_document.vpc_endpoint_s3_policy.json
+}
+
+data "aws_iam_policy_document" "vpc_endpoint_s3_policy" {
+  statement {
+    sid    = ""
+    effect = "Allow"
+    principals {
+      type = "*"
+      identifiers = [
+        "*"
+      ]
+    }
+    actions = [
+      "s3:DeleteObject*",
+      "s3:GetObject*",
+      "s3:ListBucket",
+      "s3:PutObject"
+    ]
+    resources = [
+      "arn:aws:s3:::assets-${var.env}-katsuya-place-work",
+      "arn:aws:s3:::assets-${var.env}-katsuya-place-work/*"
+    ]
+  }
+}
