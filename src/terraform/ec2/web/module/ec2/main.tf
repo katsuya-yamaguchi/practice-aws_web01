@@ -13,7 +13,7 @@ resource "aws_launch_template" "web" {
   name                                 = "web"
   description                          = ""
   disable_api_termination              = false
-  image_id                             = "ami-0f1a456229975d564"
+  image_id                             = "ami-0b6234dd3d50d475a"
   instance_initiated_shutdown_behavior = "stop"
   iam_instance_profile {
     arn = var.web_instance_profile_arn
