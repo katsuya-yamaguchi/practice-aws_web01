@@ -5,6 +5,10 @@
     # - name: update
     #   yum: name=* state=latest
 
+    - name: install mysql repository
+      yum:
+        name: https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm
+
     - name: install package
       yum: 
         name:
@@ -13,8 +17,9 @@
           - openssl-devel
           - readline-devel
           - zlib-devel
-          - mysql
-          - mysql-devel
+          - mysql-community-client
+          - mysql-community-devel
+          - jq
 
     - name: curl nodejs
       shell: curl https://rpm.nodesource.com/setup_13.x | bash -
@@ -43,6 +48,7 @@
             export AWS_ACCESS_KEY_ID={{AWS_ACCESS_KEY_ID}}
             export AWS_SECRET_ACCESS_KEY={{AWS_SECRET_KEY_ID}}
             export AWS_DEFAULT_REGION=ap-northeast-1
+            export RAILS_ENV=production
 
     - name: create rbenv plugins dir
       become_user: app-user
@@ -105,6 +111,25 @@
       become_user: app-user
       shell: source ~/.bash_profile && aws secretsmanager get-secret-value --secret-id ssh_secret_key_github --query 'SecretBinary' --output 'text' | base64 -d > /home/app-user/.ssh/id_rsa
       when: check_ssh_secretkey.rc != 0
+
+    - name: check db login info
+      become_user: app-user
+      shell: |
+        . ~/.bash_profile
+        test $DATABASE_URL
+      register: check_db_login_info
+      ignore_errors: True
+
+    - name: get db login info
+      become_user: app-user
+      shell: |
+        source ~/.bash_profile
+        SECRET_STRING=`aws secretsmanager get-secret-value --secret-id rds_login_user --query 'SecretString' | jq fromjson`
+        DB_USER=`echo $SECRET_STRING | jq .username`
+        DB_PASS=`echo $SECRET_STRING | jq .password`
+        DB_HOST=`echo $SECRET_STRING | jq .host`
+        echo "export DATABASE_URL=mysql://${DB_USER}:${DB_PASS}@${DB_HOST}/sample_app" >> ~/.bash_profile
+      when: check_db_login_info.rc != 0
 
     - name: chown && chmod ssh secretkey
       file:

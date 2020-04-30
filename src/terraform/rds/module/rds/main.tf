@@ -52,7 +52,8 @@ resource "aws_db_instance" "db" {
   max_allocated_storage = 0
   monitoring_interval   = 1
   monitoring_role_arn   = aws_iam_role.default.arn
-  multi_az              = true
+  #multi_az              = true
+  multi_az              = false
   name                  = "sample_app"
   # option_group_name    = "sample_app"
   parameter_group_name = aws_db_parameter_group.db_pg.name
