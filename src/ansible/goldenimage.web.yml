@@ -14,6 +14,12 @@
           - readline-devel
           - zlib-devel
           - bzip2
+    - name: curl nodejs
+      shell: curl https://rpm.nodesource.com/setup_13.x | bash -
+    
+    - name: install nodejs
+      yum:
+        name: nodejs
 
     - name: add app user
       user:
