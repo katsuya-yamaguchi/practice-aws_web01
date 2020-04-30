@@ -5,6 +5,10 @@
     # - name: update
     #   yum: name=* state=latest
 
+    - name: install mysql repository
+      yum:
+        name: https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm
+
     - name: install package
       yum: 
         name:
@@ -13,8 +17,8 @@
           - openssl-devel
           - readline-devel
           - zlib-devel
-          - mysql
-          - mysql-devel
+          - mysql-community-client
+          - mysql-community-devel
 
     - name: curl nodejs
       shell: curl https://rpm.nodesource.com/setup_13.x | bash -
