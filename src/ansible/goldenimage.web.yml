@@ -13,7 +13,9 @@
           - openssl-devel
           - readline-devel
           - zlib-devel
-          - bzip2
+          - mysql
+          - mysql-devel
+
     - name: curl nodejs
       shell: curl https://rpm.nodesource.com/setup_13.x | bash -
     
@@ -73,7 +75,14 @@
 
     - name: activate ruby
       become_user: app-user
-      shell: . ~/.bash_profile && rbenv install 2.6.3
+      shell: . ~/.bash_profile && rbenv install 2.6.3 && rbenv local 2.6.3
+      args:
+        chdir: /home/app-user
+      when: check_ruby_version.rc != 0
+
+    - name: install bundler
+      become_user: app-user
+      shell: . ~/.bash_profile && gem install bundler
       args:
         chdir: /home/app-user
       when: check_ruby_version.rc != 0
@@ -109,6 +118,14 @@
       git:
         repo: git@github.com:katsuya-yamaguchi/rails_sample_apps.git
         dest: /home/app-user/www/app
+        version: change-db-from-sqlite-to-mysql
         key_file: /home/app-user/.ssh/id_rsa
         accept_hostkey: yes
         force: yes
+
+    - name: setup rails
+      become_user: app-user
+      shell: source ~/.bash_profile && bundle install --without=development test
+      args:
+        chdir: /home/app-user/www/app
+      ignore_errors: True
