@@ -19,6 +19,7 @@ resource "aws_launch_template" "web" {
     arn = var.web_instance_profile_arn
   }
   instance_type = var.instance_type
+  user_data     = filebase64("${path.module}/userdata.sh")
   key_name      = "web01"
   monitoring {
     enabled = true
@@ -39,6 +40,7 @@ resource "aws_autoscaling_group" "web" {
   default_cooldown = 300
   launch_template {
     id = aws_launch_template.web.id
+    version = "$Latest"
   }
   health_check_grace_period = 300
   health_check_type         = "EC2"
