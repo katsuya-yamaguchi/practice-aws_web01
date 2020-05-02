@@ -39,7 +39,7 @@ resource "aws_autoscaling_group" "web" {
   min_size         = 1
   default_cooldown = 300
   launch_template {
-    id = aws_launch_template.web.id
+    id      = aws_launch_template.web.id
     version = "$Latest"
   }
   health_check_grace_period = 300
