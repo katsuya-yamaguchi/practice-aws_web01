@@ -56,12 +56,12 @@ module "ec2" {
   web_instance_profile_arn = data.terraform_remote_state.iam.outputs.web_instance_profile_arn
 }
 
-# module "elb" {
-#   source = "../../module/elb"
+module "elb" {
+  source = "../../module/elb"
 
-#   env                     = "dev"
-#   subnet_id_private_web_a = data.terraform_remote_state.network.outputs.subnet_id_private_web_a
-#   subnet_id_private_web_c = data.terraform_remote_state.network.outputs.subnet_id_private_web_c
-#   security_group_alb      = data.terraform_remote_state.network.outputs.security_group_alb
-#   logging_bucket          = data.terraform_remote_state.s3.outputs.s3_bucket_logging
-# }
+  env                     = "dev"
+  subnet_id_private_web_a = data.terraform_remote_state.network.outputs.subnet_id_private_web_a
+  subnet_id_private_web_c = data.terraform_remote_state.network.outputs.subnet_id_private_web_c
+  security_group_alb      = data.terraform_remote_state.network.outputs.security_group_alb
+  logging_bucket          = data.terraform_remote_state.s3.outputs.s3_bucket_logging
+}
