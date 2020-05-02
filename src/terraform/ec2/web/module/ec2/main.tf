@@ -7,13 +7,14 @@ variable "subnet_id_private_web_a" {}
 variable "subnet_id_private_web_c" {}
 variable "security_group_web" {}
 variable "web_instance_profile_arn" {}
+variable "AMI_IMAGE_ID" {}
 
 
 resource "aws_launch_template" "web" {
   name                                 = "web"
   description                          = ""
   disable_api_termination              = false
-  image_id                             = "ami-0b6234dd3d50d475a"
+  image_id                             = var.AMI_IMAGE_ID
   instance_initiated_shutdown_behavior = "stop"
   iam_instance_profile {
     arn = var.web_instance_profile_arn

@@ -39,6 +39,8 @@ provider "aws" {
   region = "ap-northeast-1"
 }
 
+variable "AMI_IMAGE_ID" {}
+
 module "ec2" {
   source = "../../module/ec2"
 
@@ -46,6 +48,7 @@ module "ec2" {
   az_a                     = "ap-northeast-1a"
   az_c                     = "ap-northeast-1c"
   instance_type            = "t2.micro"
+  AMI_IMAGE_ID             = var.AMI_IMAGE_ID
   key_pair_name            = "web01"
   subnet_id_private_web_a  = data.terraform_remote_state.network.outputs.subnet_id_private_web_a
   subnet_id_private_web_c  = data.terraform_remote_state.network.outputs.subnet_id_private_web_c
