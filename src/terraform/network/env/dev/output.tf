@@ -1,3 +1,6 @@
+output "vpc_id" {
+  value = module.vpc.vpc_id
+}
 output "security_group_alb" {
   value = module.security_group.security_group_alb
 }
