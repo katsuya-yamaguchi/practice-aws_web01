@@ -3,6 +3,7 @@ variable "subnet_id_private_web_a" {}
 variable "subnet_id_private_web_c" {}
 variable "logging_bucket" {}
 variable "security_group_alb" {}
+variable "vpc_id" {}
 
 
 resource "aws_lb" "alb" {
@@ -37,6 +38,7 @@ resource "aws_lb_target_group" "web" {
   slow_start                    = 0
   load_balancing_algorithm_type = "round_robin"
   target_type                   = "instance"
+  vpc_id                        = var.vpc_id
 
   stickiness {
     type            = "lb_cookie"

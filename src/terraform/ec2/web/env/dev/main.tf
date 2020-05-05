@@ -64,4 +64,5 @@ module "elb" {
   subnet_id_private_web_c = data.terraform_remote_state.network.outputs.subnet_id_private_web_c
   security_group_alb      = data.terraform_remote_state.network.outputs.security_group_alb
   logging_bucket          = data.terraform_remote_state.s3.outputs.s3_bucket_logging
+  vpc_id                  = data.terraform_remote_state.network.outputs.vpc_id
 }
