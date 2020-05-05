@@ -17,6 +17,7 @@
           - openssl-devel
           - readline-devel
           - zlib-devel
+          - mysql-community-server
           - mysql-community-client
           - mysql-community-devel
           - jq
