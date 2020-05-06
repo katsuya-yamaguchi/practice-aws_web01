@@ -22,7 +22,7 @@ resource "aws_lb" "alb" {
   idle_timeout               = 60
   access_logs {
     bucket  = var.logging_bucket
-    prefix  = join("/", list("alb", "access_logs.log"))
+    prefix  = "alb"
     enabled = true
   }
   tags = {
