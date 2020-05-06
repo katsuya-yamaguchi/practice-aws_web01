@@ -143,7 +143,7 @@
       git:
         repo: git@github.com:katsuya-yamaguchi/rails_sample_apps.git
         dest: /home/app-user/www/app
-        version: change-db-from-sqlite-to-mysql
+        version: HEAD
         key_file: /home/app-user/.ssh/id_rsa
         accept_hostkey: yes
         force: yes
