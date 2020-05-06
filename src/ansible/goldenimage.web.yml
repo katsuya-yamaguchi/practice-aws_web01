@@ -17,7 +17,6 @@
           - openssl-devel
           - readline-devel
           - zlib-devel
-          - mysql-community-server
           - mysql-community-client
           - mysql-community-devel
           - jq
@@ -129,7 +128,7 @@
         DB_USER=`echo $SECRET_STRING | jq .username`
         DB_PASS=`echo $SECRET_STRING | jq .password`
         DB_HOST=`echo $SECRET_STRING | jq .host`
-        echo "export DATABASE_URL=mysql://${DB_USER}:${DB_PASS}@${DB_HOST}/sample_app" >> ~/.bash_profile
+        echo "export DATABASE_URL=mysql2://${DB_USER}:${DB_PASS}@${DB_HOST}/sample_app" >> ~/.bash_profile
       when: check_db_login_info.rc != 0
 
     - name: chown && chmod ssh secretkey
