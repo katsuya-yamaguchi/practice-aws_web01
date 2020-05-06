@@ -154,3 +154,10 @@
       args:
         chdir: /home/app-user/www/app
       ignore_errors: True
+
+    - name: add rails env
+      blockinfile:
+        dest: /root/.bash_profile
+        content: |
+          export RAILS_ENV=production
+          export SECRET_KEY_BASE={{SECRET_KEY_BASE}}
