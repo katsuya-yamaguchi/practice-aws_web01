@@ -10,7 +10,7 @@ jobs:
       - run: docker-compose build
       - run: docker-compose run --rm tf /var/tmp/terraform fmt -recursive /tf
       - slack/status:
-          webhook: webhook
+          webhook: ${SLACK_WEBHOOK}
 
 workflows:
   test:
