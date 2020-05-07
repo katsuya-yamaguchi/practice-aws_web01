@@ -54,6 +54,7 @@ module "ec2" {
   subnet_id_private_web_c  = data.terraform_remote_state.network.outputs.subnet_id_private_web_c
   security_group_web       = data.terraform_remote_state.network.outputs.security_group_web
   web_instance_profile_arn = data.terraform_remote_state.iam.outputs.web_instance_profile_arn
+  web_lb_target_group_arn  = module.elb.web_lb_target_group_arn
 }
 
 module "elb" {

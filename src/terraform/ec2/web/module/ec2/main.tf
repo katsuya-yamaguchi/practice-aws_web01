@@ -8,7 +8,7 @@ variable "subnet_id_private_web_c" {}
 variable "security_group_web" {}
 variable "web_instance_profile_arn" {}
 variable "AMI_IMAGE_ID" {}
-
+variable "web_lb_target_group_arn" {}
 
 resource "aws_launch_template" "web" {
   name                                 = "web"
@@ -44,7 +44,7 @@ resource "aws_autoscaling_group" "web" {
     version = "$Latest"
   }
   health_check_grace_period = 300
-  health_check_type         = "EC2"
+  health_check_type         = "ELB"
   desired_capacity          = 1
   force_delete              = false
   # load_balancers = 
@@ -52,7 +52,6 @@ resource "aws_autoscaling_group" "web" {
     var.subnet_id_private_web_a,
     var.subnet_id_private_web_c
   ]
-  # target_group_arns = []
   termination_policies = ["Default"]
   # placement_group = 
   metrics_granularity = "1Minute"
@@ -60,6 +59,9 @@ resource "aws_autoscaling_group" "web" {
   wait_for_capacity_timeout = "10m"
   protect_from_scale_in     = false
   # service_linked_role_arn = 
+  target_group_arns = [
+    var.web_lb_target_group_arn
+  ]
 }
 
 resource "aws_autoscaling_policy" "scale_out_policy" {
