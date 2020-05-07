@@ -1,6 +1,8 @@
 version: 2.1
 jobs:
-  build: circleci/welcome-orb@0.4.1
+  build:
+    steps:
+      - run: echo "TEST"
 
 workflows:
   test:
