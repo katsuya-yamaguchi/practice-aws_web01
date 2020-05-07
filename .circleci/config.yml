@@ -17,8 +17,8 @@ jobs:
 
       - run: docker-compose build
       - run: docker-compose run tf /bin/bash -c "/var/tmp/terraform fmt -recursive /tf"
-      - run: docker-compose run tf /bin/bash -c "cd /tf/terraform/ec2/web/env/dev && /var/tmp/terraform init"
-      - run: docker-compose run tf /bin/bash -c "cd /tf/terraform/ec2/web/env/dev && /var/tmp/terraform plan"
+      - run: docker-compose run tf /bin/bash -c "cd /tf/terraform/network/env/dev && /var/tmp/terraform init"
+      - run: docker-compose run tf /bin/bash -c "cd /tf/terraform/network/env/dev && /var/tmp/terraform plan"
       - slack/status:
           webhook: ${SLACK_WEBHOOK}
 
