@@ -1,8 +1,10 @@
 version: 2.1
 jobs:
   build:
+    machine: true
     steps:
-      - run: echo "TEST"
+      - run: docker-compose build
+      - run: docker-compose run --rm tf /var/tmp/terraform fmt -recursive /tf
 
 workflows:
   test:
