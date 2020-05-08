@@ -18,8 +18,7 @@ jobs:
             echo "export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" >> $BASH_ENV
             if [ ! -f ~/images.tar ];then
               docker-compose build
-              docker-compose up -d
-              docker save $(docker images -q) -o ~/images.tar
+              docker save $(docker images -q) -o ~/images.tar practice-aws_web01_tf:latest
             fi
       - save_cache:
           key: docker-{{checksum ".circleci/config.yml"}}-{{checksum "docker-compose.yml"}}-{{checksum "Dockerfile"}}
