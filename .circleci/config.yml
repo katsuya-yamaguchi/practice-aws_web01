@@ -75,11 +75,11 @@ jobs:
           command: docker-compose run app /bin/bash -c "cd /infra/terraform/iam/env/dev && /var/tmp/terraform plan"
 
       - run:
-          name: terraform plan iam
+          name: terraform plan s3
           command: docker-compose run app /bin/bash -c "cd /infra/terraform/s3/env/dev && /var/tmp/terraform plan"
 
       - run:
-          name: terraform plan iam
+          name: terraform plan rds
           command: docker-compose run app /bin/bash -c "cd /infra/terraform/rds/env/dev && /var/tmp/terraform plan"
 
       - run:
