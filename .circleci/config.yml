@@ -10,7 +10,7 @@ jobs:
       - checkout
 
       - restore_cache:
-          key: docker-{{checksum ".circleci/config.yml"}}-{{checksum "docker-compose.yml"}}-{{checksum "Dockerfile"}}
+          key: docker-{{checksum "docker-compose.yml"}}-{{checksum "Dockerfile"}}
           paths: ~/images.tar
 
       - run:
@@ -24,7 +24,7 @@ jobs:
             fi
 
       - save_cache:
-          key: docker-{{checksum ".circleci/config.yml"}}-{{checksum "docker-compose.yml"}}-{{checksum "Dockerfile"}}
+          key: docker-{{checksum "docker-compose.yml"}}-{{checksum "Dockerfile"}}
           paths: ~/images.tar
 
   test:
@@ -33,7 +33,7 @@ jobs:
       - checkout
 
       - restore_cache:
-          key: docker-{{checksum ".circleci/config.yml"}}-{{checksum "docker-compose.yml"}}-{{checksum "Dockerfile"}}
+          key: docker-{{checksum "docker-compose.yml"}}-{{checksum "Dockerfile"}}
           paths: ~/images.tar
 
       - run: docker load -i ~/images.tar
