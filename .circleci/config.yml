@@ -18,6 +18,7 @@ jobs:
             echo "export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" >> $BASH_ENV
             if [ ! -f ~/images.tar ];then
               docker-compose build
+              docker-compose up -d
               docker save $(docker images -q) -o ~/images.tar
             fi
       - save_cache:
