@@ -64,7 +64,7 @@ jobs:
 
       - run:
           name: terraform plan ec2(web)
-          command: docker-compose run app /bin/bash -c "cd /infra/terraform/ec2/web/env/dev && /var/tmp/terraform plan"
+          command: docker-compose run app /bin/bash -c "cd /infra/terraform/ec2/web/env/dev && /var/tmp/terraform plan -var 'AMI_IMAGE_ID=sample'"
 
       - run:
           name: terraform plan ec2(ops)
