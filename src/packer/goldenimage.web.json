@@ -1,7 +1,7 @@
 {
   "variables": {
-    "aws_access_key": "{{ env `AWS_ACCESS_KEY_ID` }}",
-    "aws_secret_key": "{{ env `AWS_SECRET_KEY_ID` }}",
+    "aws_access_key_id": "{{ env `AWS_ACCESS_KEY_ID` }}",
+    "aws_secret_access_key": "{{ env `AWS_SECRET_ACCESS_KEY` }}",
     "secret_key_base": "{{ env `SECRET_KEY_BASE` }}"
   },
   "builders": [{
@@ -31,7 +31,7 @@
     "type": "ansible-local",
     "playbook_file": "../ansible/goldenimage.web.yml",
     "extra_arguments": [
-      "--extra-vars \"AWS_ACCESS_KEY_ID={{user `aws_access_key`}} AWS_SECRET_KEY_ID={{user `aws_secret_key`}} SECRET_KEY_BASE={{user `secret_key_base`}}\""
+      "--extra-vars \"AWS_ACCESS_KEY_ID={{user `aws_access_key_id`}} AWS_SECRET_ACCESS_KEY={{user `aws_secret_access_key`}} SECRET_KEY_BASE={{user `secret_key_base`}}\""
     ]
   }]
 }

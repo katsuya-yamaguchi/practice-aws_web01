@@ -8,39 +8,84 @@ jobs:
     machine: true
     steps:
       - checkout
+
       - restore_cache:
           key: docker-{{checksum ".circleci/config.yml"}}-{{checksum "docker-compose.yml"}}-{{checksum "Dockerfile"}}
           paths: ~/images.tar
+
       - run:
-          name:
+          name: docker image build & save
           command: |
             echo "export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" >> $BASH_ENV
             echo "export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" >> $BASH_ENV
             if [ ! -f ~/images.tar ];then
               docker-compose build
-              docker save project_tf -o ~/images.tar project_tf:latest
+              docker save project_app -o ~/images.tar project_app:latest
             fi
+
       - save_cache:
           key: docker-{{checksum ".circleci/config.yml"}}-{{checksum "docker-compose.yml"}}-{{checksum "Dockerfile"}}
           paths: ~/images.tar
+
   test:
     machine: true
     steps:
       - checkout
+
       - restore_cache:
           key: docker-{{checksum ".circleci/config.yml"}}-{{checksum "docker-compose.yml"}}-{{checksum "Dockerfile"}}
           paths: ~/images.tar
+
       - run: docker load -i ~/images.tar
 
       - run:
-          name: set aws credential to env
+          name: set aws credential to BASH_ENV
           command: |
             echo "export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" >> $BASH_ENV
             echo "export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" >> $BASH_ENV
 
-      - run: docker-compose run tf /bin/bash -c "/var/tmp/terraform fmt -recursive /tf"
-      - run: docker-compose run tf /bin/bash -c "cd /tf/terraform/network/env/dev && /var/tmp/terraform init"
-      - run: docker-compose run tf /bin/bash -c "cd /tf/terraform/network/env/dev && /var/tmp/terraform plan"
+      - run: 
+          name: terraform fmt
+          command: docker-compose run app /bin/bash -c "/var/tmp/terraform fmt -recursive /infra"
+
+      - run:
+          name: terraform init
+          command: |
+            docker-compose run app /bin/bash -c "cd /infra/terraform/network/env/dev && /var/tmp/terraform init"
+            docker-compose run app /bin/bash -c "cd /infra/terraform/ec2/web/env/dev && /var/tmp/terraform init"
+            docker-compose run app /bin/bash -c "cd /infra/terraform/ec2/ops/env/dev && /var/tmp/terraform init"
+            docker-compose run app /bin/bash -c "cd /infra/terraform/iam/env/dev && /var/tmp/terraform init"
+            docker-compose run app /bin/bash -c "cd /infra/terraform/s3/env/dev && /var/tmp/terraform init"
+            docker-compose run app /bin/bash -c "cd /infra/terraform/rds/env/dev && /var/tmp/terraform init"
+            
+      - run:
+          name: terraform plan network
+          command: docker-compose run app /bin/bash -c "cd /infra/terraform/network/env/dev && /var/tmp/terraform plan"
+
+      - run:
+          name: terraform plan ec2(web)
+          command: docker-compose run app /bin/bash -c "cd /infra/terraform/ec2/web/env/dev && /var/tmp/terraform plan -var 'AMI_IMAGE_ID=sample'"
+
+      - run:
+          name: terraform plan ec2(ops)
+          command: docker-compose run app /bin/bash -c "cd /infra/terraform/ec2/ops/env/dev && /var/tmp/terraform plan"
+
+      - run:
+          name: terraform plan iam
+          command: docker-compose run app /bin/bash -c "cd /infra/terraform/iam/env/dev && /var/tmp/terraform plan"
+
+      - run:
+          name: terraform plan s3
+          command: docker-compose run app /bin/bash -c "cd /infra/terraform/s3/env/dev && /var/tmp/terraform plan"
+
+      - run:
+          name: terraform plan rds
+          command: docker-compose run app /bin/bash -c "cd /infra/terraform/rds/env/dev && /var/tmp/terraform plan"
+
+      - run:
+          name: packer validate
+          command: docker-compose run app /bin/bash -c "cd /infra/packer && /var/tmp/packer validate goldenimage.web.json"
+
       - slack/status:
           webhook: ${SLACK_WEBHOOK}
 
