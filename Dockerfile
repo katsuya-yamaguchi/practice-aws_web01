@@ -30,4 +30,5 @@ WORKDIR ${ROOT_PATH}
 COPY .aws/config ${ROOT_PATH}/.aws/
 COPY .aws/credentials ${ROOT_PATH}/.aws/
 RUN sed -i "s/REPLACE_ACCESS_KEY/${AWS_ACCESS_KEY_ID}/g" ${ROOT_PATH}/.aws/credentials && \
-    sed -i "s/REPLACE_SECURITY_KEY/${AWS_SECRET_ACCESS_KEY}/g" ${ROOT_PATH}/.aws/credentials
+    sed -i "s/REPLACE_SECURITY_KEY/${AWS_SECRET_ACCESS_KEY}/g" ${ROOT_PATH}/.aws/credentials && \
+    echo "export SECRET_KEY_BASE=${SECRET_KEY_BASE}" >> ${ROOT_PATH}/.bash_profile
